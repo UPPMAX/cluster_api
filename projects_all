@@ -1,0 +1,3 @@
+#!/bin/bash
+# Print out all projects
+getent group|cut -f 1 -d:|grep -P "^([abgps][0-9\-]{6,20}|snic[0-9\-]+|staff)$"
