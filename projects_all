@@ -1,3 +1,28 @@
-#!/bin/bash
-# Print out all projects
-getent group|cut -f 1 -d:|grep -P "^([abgps][0-9\-]{6,20}|snic[0-9\-]+|staff)$"
+#!/usr/bin/python
+import subprocess as sub
+import re
+import sys
+
+def main():
+    # Create process
+    proc = sub.Popen("getent group", shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
+    # Generator that takes the first field of each line (':' as separator)
+    groups_gen = (line.split(":")[0] for line in gen_lines(proc))
+
+    proj_pat = "([abgps][0-9\-]{6,20}|snic[0-9\-]+|staff)"
+    # Generator that filters projects according to the above regex
+    projects_gen = (g for g in groups_gen if re.match(proj_pat, g))
+    
+    # Print out the projects
+    for p in projects_gen:
+        print p
+
+# Create a generator object that returns lines from a stdout pipe
+# of a subprocess process.
+def gen_lines(proc):
+    line = True
+    while line:
+        line = proc.stdout.readline()
+        yield line
+
+
