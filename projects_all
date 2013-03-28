@@ -9,7 +9,7 @@ def main():
     # Generator that takes the first field of each line (':' as separator)
     groups_gen = (line.split(":")[0] for line in gen_lines(proc))
 
-    proj_pat = "([abgps][0-9\-]{6,20}|snic[0-9\-]+|staff)"
+    proj_pat = "^([abgps][0-9\-]{6,20}|snic[0-9\-]+|staff)$"
     # Generator that filters projects according to the above regex
     projects_gen = (g for g in groups_gen if re.match(proj_pat, g))
     
@@ -25,4 +25,5 @@ def gen_lines(proc):
         line = proc.stdout.readline()
         yield line
 
-
+if __name__ == '__main__':
+    main()
