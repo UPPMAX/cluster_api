@@ -1,0 +1,13 @@
+#!/usr/bin/python
+from uppmax import projects
+import re
+
+def main():
+    projname_ptn = "[s][nic0-9\-]{5,15}"
+    projects_gen = projects.gen_projects()
+    for proj in projects_gen:
+        if hasattr(proj, "name") and re.match(projname_ptn, proj.name):
+            print proj.name
+
+if __name__ == '__main__':
+    main()
