@@ -1,10 +1,11 @@
 #!/usr/bin/python
-from uppmax import proj
+from uppmax import projects
 
 def main():
-    projects_gen = proj.gen_projects()
-    for p in projects_gen:
-        print p.name
+    projects_gen = projects.gen_projects()
+    for proj in projects_gen:
+        if hasattr(proj, "name"):
+            print proj.name
 
 if __name__ == '__main__':
     main()
