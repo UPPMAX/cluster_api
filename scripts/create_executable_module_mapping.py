@@ -16,17 +16,18 @@ def main():
 
     for modname, mod in mods.iteritems():
         output = run("/usr/share/Modules/bin/modulecmd bash show " + modname + " 2>&1")
-        print output
-        matches = re.findall("prepend-path.*$", output, re.MULTILINE)
-        print "Matches: " + str(matches)
+        outlines = output.split("\n")
+        for l in outlines:
+            if "prepend-path" in l or "append-path" in l:
+                print "Line: " + l
+                matches = re.findall("\/.*$", l)
+                print "Matches: " + str(matches)
 
 def run(cmd):
-    print("Now executing command: %s" % cmd)
+    #print("Now executing command: %s" % cmd)
     p = s.Popen(cmd, shell=True, stdout=s.PIPE, stderr=s.PIPE)
     stdout, stderr = p.communicate()
-    if stderr != "":
-        print "ERROR: %s" % stderr
-    return stdout
+    return stderr
 
 #function module_bins() {
 #    { for mod in $(cat ../etc/modulescache|grep -v ":"|grep -oP "^[a-zA-Z][a-zA-Z0-9\-\_]*"|grep -v "/"|sort|uniq); do 
