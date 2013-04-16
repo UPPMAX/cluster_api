@@ -1,13 +1,6 @@
 #!/usr/bin/python
 from uppmax import projects
-import re
 
-def main():
-    projname_ptn = "[ab][0-9]{7}"
-    projects_gen = projects.gen_projects()
-    for proj in projects_gen:
-        if hasattr(proj, "name") and re.match(projname_ptn, proj.name):
-            print proj.name
-
-if __name__ == '__main__':
-    main()
+projname_ptn = "[ab][0-9]{7}"
+for proj in projects.projects_by_regex_gen(projname_ptn):
+    print proj.name

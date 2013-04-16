@@ -1,23 +1,28 @@
 import re
 
-def main():
-    for p in gen_projects():
-        if re.match("[ab][0-9]{7}", p.name):
-            print p.name
+def projects_by_regex_gen(regex_pat):
+    for proj in projects_gen():
+        if hasattr(proj, "name") and re.match(regex_pat, proj.name):
+            yield proj
 
-def gen_projects():
-    pf = open("etc/projects","r")
-    p = Project()
-    for l in pf:
-        if l == "\n":
-            yield p
-            p = Project()
-        if ":" in l:
-            bits = l.split(":") 
-            if len(bits) > 1:
-                k = bits[0].strip(" \t").lower()
-                v = bits[1].strip(" \t\n")
-                setattr(p, k, v)
+# Returns a generator object yielding project objects
+def projects_gen():
+    projfile = open("etc/projects","r")
+    proj = Project()
+    for line in projfile:
+        if line == "\n":
+            # Return project object and create new one
+            yield proj
+            proj = Project()
+        if ":" in line:
+            lineparts = line.split(":") 
+            if len(lineparts) > 1:
+                fieldname = lineparts[0].strip(" \t").lower()
+                fieldval = lineparts[1].strip(" \t\n")
+                # Set the data as fields on the project object
+                setattr(proj, fieldname, fieldval)
+    projfile.close()
+
 
 class Project(object):
     pass
