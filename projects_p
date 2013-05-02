@@ -1,5 +1,5 @@
 #!/usr/bin/python
 from uppmax import projects
 
-for proj in projects.projects_by_regex_gen("[p][0-9]{7}"):
+for proj in projects.projects_by_regex_gen("[p][0-9]{6,7}"):
     print proj.name

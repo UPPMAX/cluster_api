@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from uppmax import projects
 
-projname_ptn = "[ab][0-9]{7}"
+projname_ptn = "[ab][0-9]{6,7}"
 for proj in projects.projects_by_regex_gen(projname_ptn):
     print proj.name
