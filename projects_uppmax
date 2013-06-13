@@ -1,6 +1,0 @@
-#!/usr/bin/python
-from uppmax import projects
-
-projname_ptn = "[ps][nic0-9]{5,15}"
-for proj in projects.projects_by_regex_gen(projname_ptn):
-    print proj.name

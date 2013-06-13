@@ -1,6 +1,0 @@
-#!/usr/bin/python
-from uppmax import projects
-
-for proj in projects.projects_gen():
-    if hasattr(proj, "name"):
-        print proj.name
