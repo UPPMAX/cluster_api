@@ -1,3 +1,4 @@
+import sys
 from optparse import OptionParser
 from uppmax import projects
 
@@ -8,7 +9,7 @@ op.add_option("-c","--category",help="Can be one of: uppnex, uppnex-platform, up
 opts,args = op.parse_args()
 
 if not opts.endpoint:
-    print "No endpoint specified! Use the -h flag to view options!"
+    sys.exit("No endpoint specified! Use the -h flag to view options!")
 
 def print_projname(proj):
     if hasattr(proj, "name"):
@@ -30,6 +31,8 @@ if opts.endpoint == "projects":
             projname_pattern = "[p][0-9]{6,7}"
         elif opts.category == "uppmax-snic":
             projname_pattern = "[s][nic0-9\-]{5,15}"
+        else:
+            sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
 
         for proj in projects.projects_by_regex_gen(projname_pattern):
             print_projname(proj)
