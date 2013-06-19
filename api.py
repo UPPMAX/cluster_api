@@ -46,6 +46,13 @@ elif opts.endpoint == "persons":
 elif opts.endpoint == "jobs":
     print "Jobs should be output here ..."
     # Do something else still
+elif opts.endpoint == "modules":
+    print "Jobs should be output here ..."
+    # Do something else still
+elif opts.endpoint == "executables":
+    print "Jobs should be output here ..."
+    # Do something else still
+
     
 
 # Returns the current user's projects
