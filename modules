@@ -1,0 +1,3 @@
+#!/bin/bash
+# Forward all the command line flags to api.py, just set the endpoint.
+python api.py --endpoint=modules "$@"
