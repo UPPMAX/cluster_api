@@ -1,6 +1,6 @@
 import sys
 from optparse import OptionParser
-from uppmax import projects
+from uppmax import projects, jobs
 
 op = OptionParser()
 op.add_option("-e","--endpoint")
@@ -11,9 +11,9 @@ opts,args = op.parse_args()
 if not opts.endpoint:
     sys.exit("No endpoint specified! Use the -h flag to view options!")
 
-def print_projname(proj):
-    if hasattr(proj, "name"):
-        print proj.name
+def print_name(obj):
+    if hasattr(obj, "name"):
+        print obj.name
 
 if opts.endpoint == "projects":
     if opts.category:
@@ -35,20 +35,24 @@ if opts.endpoint == "projects":
             sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
 
         for proj in projects.projects_by_regex_gen(projname_pattern):
-            print_projname(proj)
+            print_name(proj)
     else:
         # Output all projects
         for proj in projects.projects_gen():
-            print_projname(proj)
+            print_name(proj)
+
 elif opts.endpoint == "persons":
     print "Persons should be output here ..."
     # Do something else
+
 elif opts.endpoint == "jobs":
-    print "Jobs should be output here ..."
-    # Do something else still
+    for job_id in jobs.jobs_gen():
+        print job_id
+
 elif opts.endpoint == "modules":
     print "Jobs should be output here ..."
     # Do something else still
+
 elif opts.endpoint == "executables":
     print "Jobs should be output here ..."
     # Do something else still
