@@ -9,7 +9,7 @@ def jobs_gen():
         line = proc.stdout.readline()
         if line != '':
             field_names = ["id", "partition", "name", "username", "state", "time_used", "num_nodes", "reason"]
-            field_values = line.split(",")
+            field_values = [f.strip() for f in line.split(",")]
             for field_name, field_value in zip(field_names, field_values):
                 setattr(job, field_name, field_value)
             yield job

@@ -49,7 +49,7 @@ elif opts.endpoint == "persons":
 elif opts.endpoint == "jobs":
     for job in jobs.jobs_gen():
         outputs = []
-        job_fields = opts.job_fields.split(",")
+        job_fields = [f.strip() for f in opts.job_fields.split(",")]
         if job_fields == None:
             outputs.append(job.id)
         else:
