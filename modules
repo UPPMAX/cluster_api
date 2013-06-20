@@ -1,3 +1,5 @@
 #!/bin/bash
 # Forward all the command line flags to api.py, just set the endpoint.
+DIR="$( dirname "${BASH_SOURCE[0]}" )"
+cd $DIR
 python api.py --endpoint=modules "$@"
