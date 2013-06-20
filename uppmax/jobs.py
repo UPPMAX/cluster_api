@@ -15,4 +15,13 @@ def jobs_gen():
             break
 
 class Job():
-    pass
+    def __init__(self):
+        self.id = None
+        self.partition = ""
+        self.name = ""
+        self.username = ""
+        self.state = None
+        self.time_used = None
+        self.num_nodes = None
+        self.reason = ""
+
