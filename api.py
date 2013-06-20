@@ -2,11 +2,13 @@ import sys
 from optparse import OptionParser
 from uppmax import projects, jobs
 
+
 def main():
     opts = parse_args()
     # Execute function based on endpoint command line option
     endpoint_to_execute = "exec_" + opts.endpoint + "_endpoint"
     globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
+
 
 def exec_projects_endpoint(opts):
     if opts.project_category:
@@ -28,11 +30,12 @@ def exec_projects_endpoint(opts):
             sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
 
         for proj in projects.projects_by_regex_gen(projname_pattern):
-            print_name(proj)
+            print_field(proj, "name")
     else:
         # Output all projects
         for proj in projects.projects_gen():
-            print_name(proj)
+            print_field(proj, "name")
+
 
 def exec_jobs_endpoint(opts):
     for job in jobs.jobs_gen():
@@ -45,16 +48,31 @@ def exec_jobs_endpoint(opts):
                 outputs.append(getattr(job, field_name))
         print "\t".join(outputs)
 
+
 def exec_persons_endpoint(opts):
     print "Persons endpoint not yet implemented"
+
 
 def exec_modules_endpoint(opts):
     print "Modules endpoint not yet implemented"
 
+
 def exec_executables_endpoint(opts):
     print "Executables endpoint not yet implemented"
 
+
+# Helper functions
+
+
+def print_field(obj, field_name):
+   if hasattr(obj, field_name):
+        print obj.name
+
+
 def parse_args():
+    '''
+    Parse command line options
+    '''
     op = OptionParser()
     op.add_option("-e","--endpoint")
     op.add_option("--project-category",help="Can be one of: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
@@ -66,13 +84,6 @@ def parse_args():
     if not opts.endpoint:
         sys.exit("No endpoint specified! Use the -h flag to view options!")
 
-def print_name(obj):
-    if hasattr(obj, "name"):
-        print obj.name
-
-    
-# Returns the current user's projects
-#groups|tr " " "\n"|grep -P "^(staff|[abgsp][0-9]+)$"
 
 if __name__ == '__main__':
     main()
