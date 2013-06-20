@@ -46,8 +46,8 @@ elif opts.endpoint == "persons":
     # Do something else
 
 elif opts.endpoint == "jobs":
-    for job_id in jobs.jobs_gen():
-        print job_id
+    for job in jobs.jobs_gen():
+        print job.id
 
 elif opts.endpoint == "modules":
     print "Jobs should be output here ..."
