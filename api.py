@@ -5,7 +5,7 @@ from uppmax import projects, jobs
 op = OptionParser()
 op.add_option("-e","--endpoint")
 op.add_option("--project-category",help="Can be one of: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
-op.add_option("--job-fields", help="Fields to output for job. Default: id. Available: id, partition, name, username, state, time_used, num_nodes, reason")
+op.add_option("--job-fields", help="Fields to output for job. Default: id. Available: id, partition, name, username, state, time_used, num_nodes, reason. Multiple fields can be specified, and should be separated by comma.")
 
 opts,args = op.parse_args()
 
