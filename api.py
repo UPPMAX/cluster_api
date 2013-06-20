@@ -65,8 +65,8 @@ def exec_executables_endpoint(opts):
 
 
 def print_field(obj, field_name):
-   if hasattr(obj, field_name):
-        print obj.name
+    if hasattr(obj, field_name):
+        print getattr(obj, field_name)
 
 
 def parse_args():
