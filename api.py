@@ -4,7 +4,8 @@ from uppmax import projects, jobs
 
 op = OptionParser()
 op.add_option("-e","--endpoint")
-op.add_option("-c","--category",help="Can be one of: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
+op.add_option("--project-category",help="Can be one of: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
+op.add_option("--job-fields", help="Fields to output for job. Default: id. Available: id, partition, name, username, state, time_used, num_nodes, reason")
 
 opts,args = op.parse_args()
 
@@ -47,14 +48,22 @@ elif opts.endpoint == "persons":
 
 elif opts.endpoint == "jobs":
     for job in jobs.jobs_gen():
-        print job.id
+        outputs = []
+        job_fields = opts.job_fields.split(",")
+        if job_fields == None:
+            outputs.append(job.id)
+        else:
+            for field_name in job_fields:
+                outputs.append(getattr(job, field_name))
+        print " ".join(outputs)
+
 
 elif opts.endpoint == "modules":
-    print "Jobs should be output here ..."
+    print "Modules should be output here ..."
     # Do something else still
 
 elif opts.endpoint == "executables":
-    print "Jobs should be output here ..."
+    print "Executables should be output here ..."
     # Do something else still
 
     

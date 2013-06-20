@@ -4,11 +4,14 @@ import subprocess as sub
 # Returns a generator object yielding job objects
 def jobs_gen():
     job = Job()
-    proc = sub.Popen(["squeue", "-ho", "%i"], stdout = sub.PIPE, stderr = sub.PIPE)
+    proc = sub.Popen(["squeue", "-ho", "%i,%P,%j,%u,%t,%M,%D,%R"], stdout = sub.PIPE, stderr = sub.PIPE)
     while True:
         line = proc.stdout.readline()
         if line != '':
-            job.id = line.strip()
+            field_names = ["id", "partition", "name", "username", "state", "time_used", "num_nodes", "reason"]
+            field_values = line.split(",")
+            for field_name, field_value in zip(field_names, field_values):
+                setattr(job, field_name, field_value)
             yield job
             job = Job()
         else:
