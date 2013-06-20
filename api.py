@@ -40,10 +40,10 @@ def exec_projects_endpoint(opts):
 def exec_jobs_endpoint(opts):
     for job in jobs.jobs_gen():
         outputs = []
-        job_fields = [f.strip() for f in opts.job_fields.split(",")]
-        if job_fields == None:
+        if opts.job_fields == None:
             outputs.append(job.id)
         else:
+            job_fields = [f.strip() for f in opts.job_fields.split(",")]
             for field_name in job_fields:
                 outputs.append(getattr(job, field_name))
         print "\t".join(outputs)
