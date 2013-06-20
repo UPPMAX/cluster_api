@@ -23,9 +23,5 @@ def projects_gen():
                 setattr(proj, fieldname, fieldval)
     projfile.close()
 
-
 class Project(object):
     pass
-
-if __name__ == '__main__':
-    main()
