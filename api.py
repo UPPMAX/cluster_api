@@ -55,7 +55,7 @@ elif opts.endpoint == "jobs":
         else:
             for field_name in job_fields:
                 outputs.append(getattr(job, field_name))
-        print " ".join(outputs)
+        print "\t".join(outputs)
 
 
 elif opts.endpoint == "modules":
