@@ -4,55 +4,55 @@ from uppmax import projects, jobs
 
 def main():
     opts = parse_args()
-    if opts.endpoint == "projects":
-        if opts.category:
-            if opts.category == "uppnex":
-                projname_pattern = "[ab][0-9]{6,7}"
-            elif opts.category == "uppnex-platform":
-                projname_pattern = "[a][0-9]{6,7}"
-            elif opts.category == "uppnex-research":
-                projname_pattern = "[b][0-9]{6,7}"
-            elif opts.category == "course": 
-                projname_pattern = "[g][0-9]{6,7}"
-            elif opts.category == "uppmax":
-                projname_pattern = "[ps][nic0-9]{5,15}"
-            elif opts.category == "uppmax-research":
-                projname_pattern = "[p][0-9]{6,7}"
-            elif opts.category == "uppmax-snic":
-                projname_pattern = "[s][nic0-9\-]{5,15}"
-            else:
-                sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
+    # Execute function based on endpoint command line option
+    endpoint_to_execute = "exec_" + opts.endpoint + "_endpoint"
+    globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
 
-            for proj in projects.projects_by_regex_gen(projname_pattern):
-                print_name(proj)
+def exec_projects_endpoint(opts):
+    if opts.project_category:
+        if opts.project_category == "uppnex":
+            projname_pattern = "[ab][0-9]{6,7}"
+        elif opts.project_category == "uppnex-platform":
+            projname_pattern = "[a][0-9]{6,7}"
+        elif opts.project_category == "uppnex-research":
+            projname_pattern = "[b][0-9]{6,7}"
+        elif opts.project_category == "course": 
+            projname_pattern = "[g][0-9]{6,7}"
+        elif opts.project_category == "uppmax":
+            projname_pattern = "[ps][nic0-9]{5,15}"
+        elif opts.project_category == "uppmax-research":
+            projname_pattern = "[p][0-9]{6,7}"
+        elif opts.project_category == "uppmax-snic":
+            projname_pattern = "[s][nic0-9\-]{5,15}"
         else:
-            # Output all projects
-            for proj in projects.projects_gen():
-                print_name(proj)
+            sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
 
-    elif opts.endpoint == "persons":
-        print "Persons should be output here ..."
-        # Do something else
+        for proj in projects.projects_by_regex_gen(projname_pattern):
+            print_name(proj)
+    else:
+        # Output all projects
+        for proj in projects.projects_gen():
+            print_name(proj)
 
-    elif opts.endpoint == "jobs":
-        for job in jobs.jobs_gen():
-            outputs = []
-            job_fields = [f.strip() for f in opts.job_fields.split(",")]
-            if job_fields == None:
-                outputs.append(job.id)
-            else:
-                for field_name in job_fields:
-                    outputs.append(getattr(job, field_name))
-            print "\t".join(outputs)
+def exec_jobs_endpoint(opts):
+    for job in jobs.jobs_gen():
+        outputs = []
+        job_fields = [f.strip() for f in opts.job_fields.split(",")]
+        if job_fields == None:
+            outputs.append(job.id)
+        else:
+            for field_name in job_fields:
+                outputs.append(getattr(job, field_name))
+        print "\t".join(outputs)
 
+def exec_persons_endpoint(opts):
+    print "Persons endpoint not yet implemented"
 
-    elif opts.endpoint == "modules":
-        print "Modules should be output here ..."
-        # Do something else still
+def exec_modules_endpoint(opts):
+    print "Modules endpoint not yet implemented"
 
-    elif opts.endpoint == "executables":
-        print "Executables should be output here ..."
-        # Do something else still
+def exec_executables_endpoint(opts):
+    print "Executables endpoint not yet implemented"
 
 def parse_args():
     op = OptionParser()
