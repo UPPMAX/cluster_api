@@ -26,6 +26,5 @@ def projects_gen():
     yield proj
     projfile.close()
 
-
 class Project(object):
     pass
