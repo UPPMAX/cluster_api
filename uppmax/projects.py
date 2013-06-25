@@ -21,6 +21,9 @@ def projects_gen():
                 fieldval = lineparts[1].strip(" \t\n")
                 # Set the data as fields on the project object
                 setattr(proj, fieldname, fieldval)
+    # Yield the last proj object (which will not get yielded in the 
+    # loop above)
+    yield proj
     projfile.close()
 
 class Project(object):
