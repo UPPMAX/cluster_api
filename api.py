@@ -114,6 +114,7 @@ def parse_args():
                                         "state, time_used, num_nodes, reason. Multiple "
                                         "fields can be specified, and should be "
                                         "separated by comma."))
+    op.add_option("--job-filters", help=("Filter jobs based on field values")) # TODO: Add more text here
     op.add_option("--format", "-f", help=("Specify the output format. Available formats "
                                           "are tab (default), xml and json"))
     opts,args = op.parse_args()
