@@ -27,7 +27,9 @@ def exec_projects_endpoint(opts):
         elif opts.project_category == "uppmax-snic":
             projname_pattern = "[s][nic0-9\-]{5,15}"
         else:
-            sys.exit("Error: Project category is none of the allowed ones: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
+            sys.exit(("Error: Project category is none of the allowed ones: uppnex, "
+                      "uppnex-platform, uppnex-research, course, uppmax, "
+                      "uppmax-research, uppmax-snic"))
 
         for proj in projects.projects_by_regex_gen(projname_pattern):
             print_field(proj, "name")
@@ -75,8 +77,14 @@ def parse_args():
     '''
     op = OptionParser()
     op.add_option("-e","--endpoint")
-    op.add_option("--project-category",help="Can be one of: uppnex, uppnex-platform, uppnex-research, course, uppmax, uppmax-research, uppmax-snic")
-    op.add_option("--job-fields", help="Fields to output for job. Default: id. Available: id, partition, name, username, state, time_used, num_nodes, reason. Multiple fields can be specified, and should be separated by comma.")
+    op.add_option("--project-category",help=("Can be one of: uppnex, uppnex-platform, "
+                                             "uppnex-research, course, uppmax, "
+                                             "uppmax-research, uppmax-snic"))
+    op.add_option("--job-fields", help=("Fields to output for job. Default: id. "
+                                        "Available: id, partition, name, username, "
+                                        "state, time_used, num_nodes, reason. Multiple "
+                                        "fields can be specified, and should be "
+                                        "separated by comma."))
 
     opts,args = op.parse_args()
     return opts

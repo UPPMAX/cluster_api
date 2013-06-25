@@ -1,5 +1,7 @@
 #!/bin/bash
 # Forward all the command line flags to api.py, just set the endpoint.
+# echo "<clusterapi>"
 DIR="$( dirname "${BASH_SOURCE[0]}" )"
 cd $DIR
 python api.py --endpoint=jobs "$@"
+# echo "</clusterapi>"
