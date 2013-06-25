@@ -7,7 +7,9 @@ def main():
     opts = parse_args()
     # Execute function based on endpoint command line option
     endpoint_to_execute = "exec_" + opts.endpoint + "_endpoint"
-    globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
+    gen_obj = globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
+    for obj in gen_obj:
+        print obj
 
 
 def exec_projects_endpoint(opts):
@@ -32,11 +34,13 @@ def exec_projects_endpoint(opts):
                       "uppmax-research, uppmax-snic"))
 
         for proj in projects.projects_by_regex_gen(projname_pattern):
-            print_field(proj, "name")
+             if hasattr(proj, "name"):
+                yield getattr(obj, "name")
     else:
         # Output all projects
         for proj in projects.projects_gen():
-            print_field(proj, "name")
+            if hasattr(proj, "name"):
+                yield getattr(proj, "name")
 
 
 def exec_jobs_endpoint(opts):
@@ -48,7 +52,7 @@ def exec_jobs_endpoint(opts):
             job_fields = [f.strip() for f in opts.job_fields.split(",")]
             for field_name in job_fields:
                 outputs.append(getattr(job, field_name))
-        print "\t".join(outputs)
+        yield "\t".join(outputs)
 
 
 def exec_persons_endpoint(opts):
