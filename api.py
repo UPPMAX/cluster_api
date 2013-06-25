@@ -16,6 +16,8 @@ def main():
 
     if format == "tab":
         print_tabular(gen_obj)
+    elif format =="xml":
+        print_xml(gen_obj, opts.endpoint)
     else:
         print "Format '%s' not (yet?) implemented! Use the -h flag to view available options!" % opts.format
 
@@ -77,6 +79,15 @@ def exec_executables_endpoint(opts):
 def print_tabular(generator_obj):
     for item in generator_obj:
         print item
+
+def print_xml(generator_obj, endpoint_name):
+    object_type = endpoint_name[:-1] # Remove the trailing 's' in endpoint name
+    print "<cluterapi>"
+    print "<%ss>" % object_type
+    for item in generator_obj:
+        print "<%s>%s</%s>" % (object_type, item, object_type)
+    print "</%ss>" % object_type
+    print "</cluterapi>"
 
 
 # Helper functions
