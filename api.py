@@ -8,9 +8,16 @@ def main():
     # Execute function based on endpoint command line option
     endpoint_to_execute = "exec_" + opts.endpoint + "_endpoint"
     gen_obj = globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
-    for obj in gen_obj:
-        print obj
 
+    if opts.format:
+        format = opts.format
+    else:
+        format = "tab"
+
+    if format == "tab":
+        print_tabular(gen_obj)
+    else:
+        print "Format '%s' not (yet?) implemented! Use the -h flag to view available options!" % opts.format
 
 def exec_projects_endpoint(opts):
     if opts.project_category:
@@ -67,6 +74,11 @@ def exec_executables_endpoint(opts):
     print "Executables endpoint not yet implemented"
 
 
+def print_tabular(generator_obj):
+    for item in generator_obj:
+        print item
+
+
 # Helper functions
 
 
@@ -89,7 +101,8 @@ def parse_args():
                                         "state, time_used, num_nodes, reason. Multiple "
                                         "fields can be specified, and should be "
                                         "separated by comma."))
-
+    op.add_option("--format", "-f", help=("Specify the output format. Available formats "
+                                          "are tab (default), xml and json"))
     opts,args = op.parse_args()
     return opts
 
