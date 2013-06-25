@@ -19,8 +19,12 @@ def projects_gen():
             if len(lineparts) > 1:
                 fieldname = lineparts[0].strip(" \t").lower()
                 fieldval = lineparts[1].strip(" \t\n")
-                # Set the data as fields on the project object
-                setattr(proj, fieldname, fieldval)
+                if fieldname == "name":
+                    # Special handling for name. Primary id should 
+                    # always use id as field name.
+                    setattr(proj, "id", fieldval)
+                else:
+                    setattr(proj, fieldname, fieldval)
     # Yield the last proj object (which will not get yielded in the 
     # loop above)
     yield proj

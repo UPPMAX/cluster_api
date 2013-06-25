@@ -9,17 +9,20 @@ def main():
     endpoint_to_execute = "exec_" + opts.endpoint + "_endpoint"
     gen_obj = globals()[endpoint_to_execute](opts) # Call function based on function name in string FIXME: Security hole!
 
+    # Set default output format if no format is specified
     if opts.format:
         format = opts.format
     else:
         format = "tab"
 
+    # Choose how to print based on output format parameter
     if format == "tab":
         print_tabular(gen_obj)
     elif format =="xml":
         print_xml(gen_obj, opts.endpoint)
     else:
-        print "Format '%s' not (yet?) implemented! Use the -h flag to view available options!" % opts.format
+        print ("Format '%s' not (yet?) implemented! Use the -h flag to "
+               "view available options!") % opts.format
 
 def exec_projects_endpoint(opts):
     if opts.project_category:
@@ -48,8 +51,9 @@ def exec_projects_endpoint(opts):
     else:
         # Output all projects
         for proj in projects.projects_gen():
-            if hasattr(proj, "name"):
-                yield getattr(proj, "name")
+            if hasattr(proj, "id"):
+                # Only id field implemented so far
+                yield { "id" : proj.id }
 
 
 def exec_jobs_endpoint(opts):
@@ -61,7 +65,7 @@ def exec_jobs_endpoint(opts):
             job_fields = [f.strip() for f in opts.job_fields.split(",")]
             for field_name in job_fields:
                 outputs.append(getattr(job, field_name))
-        yield "\t".join(outputs)
+        yield outputs
 
 
 def exec_persons_endpoint(opts):
@@ -77,25 +81,23 @@ def exec_executables_endpoint(opts):
 
 
 def print_tabular(generator_obj):
-    for item in generator_obj:
-        print item
+    sep = "\t"
+    for items in generator_obj:
+        values = [v for k,v in items.iteritems()]
+        print sep.join(values)
+
 
 def print_xml(generator_obj, endpoint_name):
     object_type = endpoint_name[:-1] # Remove the trailing 's' in endpoint name
     print "<cluterapi>"
     print "<%ss>" % object_type
-    for item in generator_obj:
-        print "<%s>%s</%s>" % (object_type, item, object_type)
+    for items in generator_obj:
+        xmlline = "<%s " % object_type
+        line_parts = ["%s=\"%s\"" % (k,v) for k,v in items.iteritems()]
+        xmlline += " ".join(line_parts) + " />"
+        print xmlline
     print "</%ss>" % object_type
     print "</cluterapi>"
-
-
-# Helper functions
-
-
-def print_field(obj, field_name):
-    if hasattr(obj, field_name):
-        print getattr(obj, field_name)
 
 
 def parse_args():
