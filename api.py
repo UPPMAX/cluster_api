@@ -89,7 +89,7 @@ def print_tabular(generator_obj):
 
 def print_xml(generator_obj, endpoint_name):
     object_type = endpoint_name[:-1] # Remove the trailing 's' in endpoint name
-    print "<cluterapi>"
+    print "<clusterapi>"
     print "<%ss>" % object_type
     for items in generator_obj:
         xmlline = "<%s " % object_type
@@ -97,7 +97,7 @@ def print_xml(generator_obj, endpoint_name):
         xmlline += " ".join(line_parts) + " />"
         print xmlline
     print "</%ss>" % object_type
-    print "</cluterapi>"
+    print "</clusterapi>"
 
 
 def parse_args():
