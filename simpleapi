@@ -20,7 +20,16 @@ case "$1" in
     projinfo)
         echo $outstart
         echo "<projinfo>"
-        echo "Projinfo output here ..." # TODO: Implement
+        echo "<groupinfo>"
+        projinfo_tmpfile="/tmp/projinfo_$(date +%Y%m%d%H)"
+        if [[ ! -f $projinfo_tmpfile ]]; then
+            projinfo $currentuser > $projinfo_tmpfile;
+        fi;
+        # Output the info for the group as a whole
+        cat $projinfo_tmpfile|grep -P "^[a-z]+.*[0-9]+\.[0-9]+"|sed -r 's|^\s*([a-z]+)\s*([0-9]+\.[0-9]+)\s*([0-9]*)?.*$|<name>\1</name><time>\2</time><allocation>\3</allocation>|g'
+        # Output info for each user in the group
+        cat $projinfo_tmpfile|grep -P "[a-z]+.*[0-9]+\.[0-9]+"|sed -r 's|^\s*([a-z]+)\s*([0-9]+\.[0-9]+)\s*([0-9]*)?.*$|<user><name>\1</name><time>\2</time><allocation>\3</allocation></user>|g'
+        echo "</groupinfo>"
         echo "</projinfo>"
         echo $outend
         ;;
@@ -46,6 +55,6 @@ case "$1" in
         echo $outend
         ;;
     *)
-       echo $"Usage: $0 {clusterinfo|projinfo|jobinfo|userinfo}"
+       echo "Usage: $0 {clusterinfo|projinfo|jobinfo|userinfo}"
        exit 1
 esac
