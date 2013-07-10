@@ -1,4 +1,5 @@
 import sys
+import re
 from optparse import OptionParser
 from uppmax import projects, jobs
 
@@ -24,6 +25,11 @@ def main():
         print ("Format '%s' not (yet?) implemented! Use the -h flag to "
                "view available options!") % opts.format
 
+def exec_clusters_endpoint(opts):
+    for cluster in ["kalkyl", "tintin"]:
+        yield 
+
+
 def exec_projects_endpoint(opts):
     if opts.project_category:
         if opts.project_category == "uppnex":
@@ -45,9 +51,10 @@ def exec_projects_endpoint(opts):
                       "uppnex-platform, uppnex-research, course, uppmax, "
                       "uppmax-research, uppmax-snic"))
 
-        for proj in projects.projects_by_regex_gen(projname_pattern):
-             if hasattr(proj, "name"):
-                yield getattr(obj, "name")
+        for proj in projects.projects_gen():
+            if hasattr(proj, "id") and re.match(projname_pattern, proj.id):
+                # Only id field implemented so far
+                yield { "id" : proj.id }
     else:
         # Output all projects
         for proj in projects.projects_gen():
