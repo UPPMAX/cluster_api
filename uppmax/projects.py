@@ -1,10 +1,5 @@
 import re
 
-def projects_by_regex_gen(regex_pat):
-    for proj in projects_gen():
-        if hasattr(proj, "name") and re.match(regex_pat, proj.name):
-            yield proj
-
 # Returns a generator object yielding project objects
 def projects_gen():
     projfile = open("etc/projects","r")
