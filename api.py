@@ -26,9 +26,13 @@ def main():
                "view available options!") % opts.format
 
 def exec_clusters_endpoint(opts):
-    for cluster in ["kalkyl", "tintin"]:
-        yield 
-
+    for cluster in [ { "id" : "kalkyl",
+                       "maxcpus" : "8",
+                       "maxnodes" : "348"}, 
+                     { "id" : "tintin",
+                       "maxcpus" : "16",
+                       "maxnodes" : "160"}]:
+        yield cluster
 
 def exec_projects_endpoint(opts):
     if opts.project_category:
@@ -89,8 +93,8 @@ def exec_executables_endpoint(opts):
 
 def print_tabular(generator_obj):
     sep = "\t"
-    for items in generator_obj:
-        values = [v for k,v in items.iteritems()]
+    for field in generator_obj:
+        values = [v for k,v in field.iteritems()]
         print sep.join(values)
 
 
