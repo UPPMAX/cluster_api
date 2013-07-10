@@ -28,11 +28,17 @@ def main():
 def exec_clusters_endpoint(opts):
     for cluster in [ { "id" : "kalkyl",
                        "maxcpus" : "8",
-                       "maxnodes" : "348"}, 
+                       "maxnodes" : "348",
+                       "partitions" : [ "core", "node", "devel" ]}, 
                      { "id" : "tintin",
                        "maxcpus" : "16",
-                       "maxnodes" : "160"}]:
-        yield cluster
+                       "maxnodes" : "160",
+                       "partitions" : [ "core", "node", "devel", "gpu" ]}]:
+        if opts.current:
+            if cluster["id"] == "kalkyl": # FIXME: Don't hard-code
+                yield cluster
+        else:
+            yield cluster
 
 def exec_projects_endpoint(opts):
     if opts.project_category:
@@ -94,7 +100,7 @@ def exec_executables_endpoint(opts):
 def print_tabular(generator_obj):
     sep = "\t"
     for field in generator_obj:
-        values = [v for k,v in field.iteritems()]
+        values = [stringify_value(v) for k,v in field.iteritems()]
         print sep.join(values)
 
 
@@ -102,10 +108,27 @@ def print_xml(generator_obj, endpoint_name):
     object_type = endpoint_name[:-1] # Remove the trailing 's' in endpoint name
     print "<clusterapi>"
     print "<%ss>" % object_type
+    sub_collections = {}
     for items in generator_obj:
+        line_parts = []
         xmlline = "<%s " % object_type
-        line_parts = ["%s=\"%s\"" % (k,v) for k,v in items.iteritems()]
-        xmlline += " ".join(line_parts) + " />"
+        for k, v in items.iteritems():
+            if type(v) is str:
+                line_parts.append("%s=\"%s\"" % (k,v))
+            elif type(v) is list:
+                sub_collections[k] = v
+        xmlline += " ".join(line_parts)
+        if len(sub_collections) > 0:
+            xmlline += ">\n"
+            for sub_collection_name, sub_collection in sub_collections.iteritems():
+                sub_collection_item_name = sub_collection_name[:-1]
+                xmlline += "<%s>\n" % sub_collection_name
+                for item in sub_collection:
+                    xmlline += "<%s>%s</%s>\n" % (sub_collection_item_name,item,sub_collection_item_name)
+                xmlline += "</%s>\n" % sub_collection_name
+            xmlline += "</%s>" % object_type
+        else:
+            xmlline += " />"
         print xmlline
     print "</%ss>" % object_type
     print "</clusterapi>"
@@ -128,11 +151,24 @@ def parse_args():
     op.add_option("--job-filters", help=("Filter jobs based on field values")) # TODO: Add more text here
     op.add_option("--format", "-f", help=("Specify the output format. Available formats "
                                           "are tab (default), xml and json"))
+    op.add_option("--current", "-c", action="store_true", dest="current",
+            help=("Use the current default."
+                  "For clusters this means the current cluster."
+                  "For users, this means the currently logged in user."))
     opts,args = op.parse_args()
     return opts
 
     if not opts.endpoint:
         sys.exit("No endpoint specified! Use the -h flag to view options!")
+
+
+def stringify_value(value):
+    if type(value) is str:
+        return value
+    if type(value) is list:
+        return ",".join(value) 
+    else:
+        return str(value)
 
 
 if __name__ == '__main__':
