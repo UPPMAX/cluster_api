@@ -1,21 +1,33 @@
 #!/bin/bash
 
-outstart="<clusterapi>"
-outend="</clusterapi>"
+outstart="<simpleapi>"
+outend="</simpleapi>"
 case "$1" in
     clusterinfo)
         echo $outstart
-        echo "Clusterinfo output here ..."
+        echo "<clusterinfo>"
+        echo "<maxnodes>348</maxnodes>"
+        echo "<maxcpus>8</maxcpus>"
+        echo "<partitions>"
+        for partition in "core" "node" "devel"; do
+            echo "<partition>$partition</partition>"
+        done;
+        echo "</partitions>"
+        echo "</clusterinfo>"
         echo $outend
         ;;
     projinfo)
         echo $outstart
+        echo "<projinfo>"
         echo "Projinfo output here ..."
+        echo "</projinfo>"
         echo $outend
         ;;
     jobinfo)
         echo $outstart
+        echo "<jovinfo>"
         echo "Jobinfo output here ..."
+        echo "</jobinfo>"
         echo $outend
         ;;
     userinfo)
