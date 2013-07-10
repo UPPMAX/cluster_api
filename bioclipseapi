@@ -1,1 +1,19 @@
 #!/bin/bash
+
+case "$1" in
+    clusterinfo)
+        echo "Clusterinfo output here ..."
+        ;;
+    projinfo)
+        echo "Projinfo output here ..."
+        ;;
+    jobinfo)
+        echo "Jobinfo output here ..."
+        ;;
+    userinfo)
+        echo "Userinfo output here ..."
+        ;;
+    *)
+       echo $"Usage: $0 {clusterinfo|projinfo|jobinfo|userinfo}"
+       exit 1
+esac
