@@ -1,17 +1,34 @@
 #!/bin/bash
 
+outstart="<clusterapi>"
+outend="</clusterapi>"
 case "$1" in
     clusterinfo)
+        echo $outstart
         echo "Clusterinfo output here ..."
+        echo $outend
         ;;
     projinfo)
+        echo $outstart
         echo "Projinfo output here ..."
+        echo $outend
         ;;
     jobinfo)
+        echo $outstart
         echo "Jobinfo output here ..."
+        echo $outend
         ;;
     userinfo)
-        echo "Userinfo output here ..."
+        echo $outstart
+        echo "<userinfo>"
+        echo "<username>$(whoami)</username>"
+        echo "<projects>"
+        for proj in $(groups|tr " " "\n"|grep -P "^([abgps][0-9]|staff)"); do
+            echo "<project>$proj</project>"
+        done;
+        echo "</userinfo>"
+        echo "</projects>"
+        echo $outend
         ;;
     *)
        echo $"Usage: $0 {clusterinfo|projinfo|jobinfo|userinfo}"
