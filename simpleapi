@@ -2,6 +2,7 @@
 
 outstart="<simpleapi>"
 outend="</simpleapi>"
+currentuser=$(whoami)
 case "$1" in
     clusterinfo)
         echo $outstart
@@ -19,21 +20,23 @@ case "$1" in
     projinfo)
         echo $outstart
         echo "<projinfo>"
-        echo "Projinfo output here ..."
+        echo "Projinfo output here ..." # TODO: Implement
         echo "</projinfo>"
         echo $outend
         ;;
     jobinfo)
         echo $outstart
-        echo "<jovinfo>"
-        echo "Jobinfo output here ..."
+        echo "<jobinfo>"
+        echo "<jobs>"
+        squeue --noheader --user=$currentuser --format="<job id=\"%i\" partition=\"%P\" name=\"%j\" username=\"%u\" state=\"%T\" time_elapsed=\"%M\" nodescnt=\"%D\" nodelist=\"%R\">"
+        echo "</jobs>"
         echo "</jobinfo>"
         echo $outend
         ;;
     userinfo)
         echo $outstart
         echo "<userinfo>"
-        echo "<username>$(whoami)</username>"
+        echo "<username>$currentuser</username>"
         echo "<projects>"
         for proj in $(groups|tr " " "\n"|grep -P "^([abgps][0-9]|staff)"); do
             echo "<project>$proj</project>"
