@@ -35,9 +35,9 @@ case "$1" in
                 echo "<groupinfo>";
             fi;
             # Output the info for the group as a whole
-            echo $line|grep -P "^[a-z]+\_*[0-9]+\_*[0-9]+"|sed -r 's|([a-z0-9]+)\_+([0-9]+\.[0-9]+)\_+([0-9]+)|<name>\1</name><time>\2</time><allocation>\3</allocation>|g'
+            echo $line|grep -P "^[a-z]"|sed -r 's|([a-z0-9]+)\_+([0-9]+\.[0-9]+)\_+([0-9]+)|<name>\1</name><time>\2</time><allocation>\3</allocation>|g'
             # Output info for each user in the group
-            echo $line|grep -P "^\_+[a-z]+\_*[0-9]+\_*[0-9]+"|sed -r 's|\_+([a-z]+)\_+([0-9]+\.[0-9]+)(\_+([0-9]+))?|<user><name>\1</name><time>\2</time><allocation>\4</allocation></user>|g'
+            echo $line|grep -P "^\_+[a-z]"|sed -r 's|\_+([a-z]+)\_+([0-9]+\.[0-9]+)(\_+([0-9]+))?|<user><name>\1</name><time>\2</time><allocation>\4</allocation></user>|g'
         done;
         echo "</groupinfo>"
         echo "</projinfo>"
@@ -47,7 +47,7 @@ case "$1" in
         echo $outstart
         echo "<jobinfo>"
         echo "<jobs>"
-        squeue --noheader --user=$currentuser --format="<job id=\"%i\" partition=\"%P\" name=\"%j\" username=\"%u\" state=\"%T\" time_elapsed=\"%M\" nodescnt=\"%D\" nodelist=\"%R\">"
+        squeue --noheader --user=$currentuser --format="<job id=\"%i\" partition=\"%P\" name=\"%j\" username=\"%u\" state=\"%T\" time_elapsed=\"%M\" nodescnt=\"%D\" nodelist=\"%R\" />"
         echo "</jobs>"
         echo "</jobinfo>"
         echo $outend
