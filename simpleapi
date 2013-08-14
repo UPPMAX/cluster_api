@@ -64,6 +64,16 @@ case "$1" in
         echo "</userinfo>"
         echo $outend
         ;;
+    modulesforbin)
+        binary=$2
+        echo $outstart
+        echo "<modulesforbin>"
+        echo "<modules>"
+        echo "<module name=\"uppmax\" />"
+        echo "</modules>"
+        echo "</modulesforbin>"
+        echo $outend
+        ;;
     *)
        echo "Usage: $0 {clusterinfo|projinfo|jobinfo|userinfo}"
        exit 1
