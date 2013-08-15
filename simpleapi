@@ -67,12 +67,25 @@ case "$1" in
         ;;
     modulesforbin)
         if [[ -n $2 ]]; then
+            # Set file to use as cache for modules info
+            MODCACHE=~/.modulescache
             binary=$2
-            echo $outstart
+            module load bioinfo-tools
+            if [[ ! -f $MODCACHE ]]; then
+                module -i apropos $binary 2> $MODCACHE
+            else
+                # Check if the cache is more than one day old
+                lcdate=`stat -c %y ~/.modulescache|awk '{ print $1 }'`;
+                today=`date +%Y-%m-%d`;
+                if [[ ! ( $lcdate = $today ) ]]; then
+                    # Recreate the cache, since it's more than one day old
+                    module -i apropos $binary 2> $MODCACHE
+                fi;
+            fi;
+           echo $outstart
             echo "<modulesforbin>"
             echo "<modules>"
-            module load bioinfo-tools;
-            module -i apropos $binary 2>&1|grep -i $binary|awk '{ print "<module name=\"" $1 "\" />" }';
+            cat $MODCACHE|grep -i $binary|awk '{ print "<module name=\"" $1 "\" />" }';
             echo "</modules>"
             echo "</modulesforbin>"
             echo $outend;
