@@ -22,9 +22,9 @@ case "$1" in
         echo $outstart;
         echo "<projinfo>";
         projinfo_tmpfile="/tmp/projinfo_$(date +%Y%m%d%H)"
-        if [[ ! -f $projinfo_tmpfile ]]; then
+        #if [[ ! -f $projinfo_tmpfile ]]; then
             projinfo $currentuser > $projinfo_tmpfile;
-        fi;
+        #fi;
         firstgroupinfo=true;
         for line in $(cat $projinfo_tmpfile|tr " " "_"); do
             groupinfo_start=$(echo $line|grep -P "\-{10,100}")
@@ -71,21 +71,10 @@ case "$1" in
             MODCACHE=~/.modulescache
             binary=$2
             module load bioinfo-tools
-            if [[ ! -f $MODCACHE ]]; then
-                module -i apropos $binary 2> $MODCACHE
-            else
-                # Check if the cache is more than one day old
-                lcdate=`stat -c %y ~/.modulescache|awk '{ print $1 }'`;
-                today=`date +%Y-%m-%d`;
-                if [[ ! ( $lcdate = $today ) ]]; then
-                    # Recreate the cache, since it's more than one day old
-                    module -i apropos $binary 2> $MODCACHE
-                fi;
-            fi;
-           echo $outstart
+            echo $outstart
             echo "<modulesforbin>"
             echo "<modules>"
-            cat $MODCACHE|grep -i $binary|awk '{ print "<module name=\"" $1 "\" />" }';
+            module -i apropos $binary 2>&1|grep -P "^[a-zA-Z0-9\.]+/[0-9]"|grep -v "ERROR"|awk '{ print "<module name=\"" $1 "\" />" }';
             echo "</modules>"
             echo "</modulesforbin>"
             echo $outend;
