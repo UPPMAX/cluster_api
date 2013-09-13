@@ -3,6 +3,7 @@
 outstart="<simpleapi>"
 outend="</simpleapi>"
 currentuser=$(whoami)
+projpattern="^([abgps][0-9]|staff)"
 
 case "$1" in
     clusterinfo)
@@ -23,7 +24,7 @@ case "$1" in
         echo "<projinfo>";
         projinfo_tmpfile="/tmp/projinfo_$(date +%Y%m%d%H)"
         #if [[ ! -f $projinfo_tmpfile ]]; then
-            projinfo $currentuser > $projinfo_tmpfile;
+            projinfo `groups|tr " " "\n"|egrep "$projpattern"|tr "\n" " "` > $projinfo_tmpfile;
         #fi;
         firstgroupinfo=true;
         for line in $(cat $projinfo_tmpfile|tr " " "_"); do
@@ -36,7 +37,7 @@ case "$1" in
                 echo "<groupinfo>";
             fi;
             # Output the info for the group as a whole
-            echo $line|grep -P "^[a-z]"|sed -r 's|([a-z0-9]+)\_+([0-9]+\.[0-9]+)\_+([0-9]+)|<name>\1</name><time>\2</time><allocation>\3</allocation>|g'
+            echo $line|grep -P "^[a-z]"|sed -r 's|([a-z0-9]+)\_+([0-9]+\.[0-9]+)\_+([0-9a-z][0-9a-z_]+)|<name>\1</name><time>\2</time><allocation>\3</allocation>|g'
             # Output info for each user in the group
             echo $line|grep -P "^\_+[a-z]"|sed -r 's|\_+([a-z]+)\_+([0-9]+\.[0-9]+)(\_+([0-9]+))?|<user><name>\1</name><time>\2</time><allocation>\4</allocation></user>|g'
         done;
@@ -58,7 +59,7 @@ case "$1" in
         echo "<userinfo>"
         echo "<username>$currentuser</username>"
         echo "<projects>"
-        for proj in $(groups|tr " " "\n"|grep -P "^([abgps][0-9]|staff)"); do
+        for proj in $(groups|tr " " "\n"|grep -P "$projpattern"); do
             echo "<project>$proj</project>"
         done;
         echo "</projects>"
